@@ -1,0 +1,21 @@
+---
+title: 🧼 Terminal
+description: Printing text you did not write without the terminal acting on it.
+---
+
+A build log, an API error or a commit subject can contain escape sequences, and a terminal acts on them: it can write the clipboard, show a link that goes elsewhere, rewrite lines already printed or change the window title.
+
+```ts
+import { isTTYSafe, sanitizeForTerminal } from "@kud/cli-safe"
+
+process.stdout.write(
+  sanitizeForTerminal(untrusted, { keepColour: !isTTYSafe(process.stdout) }),
+)
+```
+
+| Function | Behaviour |
+| --- | --- |
+| `sanitizeForTerminal(text, { keepColour? })` | Removes CSI, OSC (links, clipboard, titles), DCS, SOS, PM, APC, two-byte escapes, C0 controls except newline and tab, DEL and C1 controls. CR and CRLF become LF. `keepColour` keeps well-formed SGR sequences only. Accepts a string or UTF-8 bytes. |
+| `isTTYSafe(stream)` | `false` for an interactive terminal, `true` for a file, a pipe or a missing stream. |
+
+An unterminated control string loses its introducer and its payload is printed as text, so nothing is silently swallowed. Sanitising text bound for a file or pipe is never wrong, since it may reach a terminal later.
