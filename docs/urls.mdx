@@ -1,0 +1,24 @@
+---
+title: 🧭 URLs
+description: Building request URLs from names and keeping credentials on the right host.
+---
+
+```ts
+import { assertSecureBaseUrl, joinUrlPath, safeFetch } from "@kud/cli-safe"
+
+const base = assertSecureBaseUrl(config.url, { allowLocalhost: true })
+const res = await safeFetch(joinUrlPath(base, "projects", name), {
+  headers: { "X-Api-Key": key },
+}, { sensitiveHeaders: ["x-api-key"] })
+```
+
+| Function | Behaviour |
+| --- | --- |
+| `safePathSegment(value)` | `encodeURIComponent` of a string or finite number; refuses `""`, `.`, `..`, `/`, `\`, NUL and ill-formed Unicode. |
+| `joinUrlPath(base, ...segments)` | Appends safe segments to an absolute URL (query and fragment kept) or a `/` path. |
+| `assertSameOrigin(url, base)` | Resolves `url` against `base`; throws `CROSS_ORIGIN` unless scheme, host and port match. |
+| `assertSecureBaseUrl(url, { allowLocalhost?, onInsecure? })` | Requires `https:`; `http:` throws `INSECURE_URL` (or warns), except on loopback hosts with `allowLocalhost`. |
+| `stripAuthOnCrossOriginRedirect(headers, from, to, { sensitiveHeaders? })` | A copy of the headers, without credential headers when the origin changes. |
+| `safeFetch(url, init?, options?)` | `fetch` that follows redirects itself: drops credentials across origins (or refuses with `sameOriginOnly`), refuses HTTPS downgrades and cross-origin body resends, caps redirects. |
+
+Every refusal is an `UnsafeInputError` with a `code`. Messages name origins only, never credentials, paths or queries.

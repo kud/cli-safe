@@ -1,0 +1,4 @@
+{
+  "title": "cli-safe",
+  "pages": ["index", "terminal", "secret-files", "urls", "shell"]
+}

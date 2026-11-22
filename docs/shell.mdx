@@ -1,0 +1,23 @@
+---
+title: 🐚 Shell and AppleScript
+description: Quoting for the rare command line that has to be a string.
+---
+
+Prefer `execFile` or `spawn` with an argument array: no shell starts, so nothing in an argument is interpreted. Quoting is for a command shown to the user, a line written into a script, or a command run over `ssh`.
+
+| Function | Behaviour |
+| --- | --- |
+| `shellQuote(value)` | One word for `sh`, `dash`, `bash` or `zsh`: plain words unchanged, anything else single-quoted with `'` written as `'\''`. Throws on NUL. |
+| `shellJoin(argv)` | `shellQuote` each argument and join with spaces. |
+| `appleScriptString(value)` | An AppleScript literal with `\`, `"`, tab, newline and carriage return escaped. Throws on NUL. |
+
+For AppleScript, passing data through `on run argv` is safer than any literal:
+
+```ts
+execFile("osascript", [
+  "-e", "on run argv",
+  "-e", "display notification (item 1 of argv)",
+  "-e", "end run",
+  message,
+])
+```

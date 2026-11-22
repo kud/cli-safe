@@ -1,0 +1,17 @@
+---
+title: 👋 Introduction
+description: Small, dependency-free safety helpers for Node CLIs and MCP servers.
+---
+
+`@kud/cli-safe` holds the guards every command-line tool or MCP server that talks to a remote service ends up writing: printing untrusted text to a terminal, storing a token on disk, building request URLs from names, keeping credentials on the right host, and quoting the rare command line that has to be a string. It has no runtime dependencies.
+
+```sh
+npm install @kud/cli-safe
+```
+
+## What's here
+
+- [🧼 Terminal](/projects/cli-safe/docs/terminal) — `sanitizeForTerminal` and `isTTYSafe`
+- [🔐 Secret files](/projects/cli-safe/docs/secret-files) — `writeSecretFile` and `readSecretFile`
+- [🧭 URLs](/projects/cli-safe/docs/urls) — path segments, origin checks and `safeFetch`
+- [🐚 Shell and AppleScript](/projects/cli-safe/docs/shell) — `shellQuote`, `shellJoin` and `appleScriptString`
